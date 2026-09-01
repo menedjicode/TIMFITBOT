@@ -11,7 +11,19 @@ import socket
 
 import requests
 
+def dummy_server():
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(('0.0.0.0', 10000))
+            s.listen(1)
+            while True:
+                conn, _ = s.accept()
+                conn.send(b"HTTP/1.1 200 OK\n\nBot is running")
+                conn.close()
+    except:
+        pass
 
+threading.Thread(target=dummy_server, daemon=True).start()
 
 print("✅ Бот запущен, токен получен")
 
@@ -19,12 +31,6 @@ ITEMS_PER_PAGE = 3  # Сколько тренеров на странице
 
 bot = telebot.TeleBot(config.BOT_TOKEN)
 
-'''
-if config.PROXY_URL:
-    apihelper.proxy = {
-        'https': config.PROXY_URL
-    }
-    '''
 user_data = {}
 
 print(f"✅ Токен: {config.BOT_TOKEN[:10]}...") 
@@ -39,6 +45,7 @@ def get_all_trainers():
 
 @bot.message_handler(commands=['start'])
 def start(message):
+    print("🔥 start ВЫЗВАН")
     print(f"✅ Получена команда /start от {message.chat.id}")
     user_id = message.chat.id
     user_data[user_id] = {}
@@ -634,25 +641,6 @@ def process_name(message):
 bot.stop_polling()
 print("Старое соединение сброшено")
 
-import sys
-sys.stdout.flush()
-print("✅ Бот запущен и готов к работе")
-sys.stdout.flush()
+bot.start_polling(non_stop=True)
 
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import json
 
-class WebhookHandler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        if self.path == '/webhook':
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            update = telebot.types.Update.de_json(post_data.decode('utf-8'))
-            print(f"📩 Обновление: {update}")  # 👈 ПРОВЕРКА
-            bot.process_new_updates([update])
-            self.send_response(200)
-            self.end_headers()
-bot.remove_webhook()
-bot.set_webhook(url='https://timfitbot.onrender.com/webhook')
-server = HTTPServer(('0.0.0.0', 10000), WebhookHandler)
-server.serve_forever()
