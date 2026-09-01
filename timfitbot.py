@@ -29,12 +29,16 @@ threading.Thread(target=dummy_server, daemon=True).start()
 ITEMS_PER_PAGE = 3  # Сколько тренеров на странице
 
 bot = telebot.TeleBot(config.BOT_TOKEN)
+
 import requests
+'''
 if config.PROXY_URL:
     apihelper.proxy = {
         'https': config.PROXY_URL
     }
+    '''
 user_data = {}
+print("✅ Бот запущен, токен получен")
 
 def get_all_trainers():
     conn = sqlite3.connect('timfitbot.sql')
