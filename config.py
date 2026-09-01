@@ -5,4 +5,5 @@ if ADMIN_IDS:
     ADMIN_IDS = [int(id.strip()) for id in ADMIN_IDS.split(',')]
 else:
     ADMIN_IDS = []  # 👈 Если пусто — пустой список
-BOT_TOKEN=''
+
+BOT_TOKEN = os.getenv('BOT_TOKEN', '')
