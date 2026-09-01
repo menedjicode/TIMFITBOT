@@ -637,8 +637,13 @@ def process_name(message):
 
     except Exception as e:
         bot.send_message(user_id, f'❌ Ошибка: {str(e)}')
-bot.delete_webhook()
-print('ZAPUSKAJU POLLING')
-bot.polling(non_stop=True)
+try:
+    bot.delete_webhook()
+    print("✅ Вебхук удалён")
+except:
+    pass
 
+# Запускаем polling
+print("🚀 Запускаю polling...")
+bot.polling(none_stop=True, interval=0, timeout=20)
 
