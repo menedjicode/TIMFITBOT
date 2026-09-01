@@ -31,7 +31,7 @@ ITEMS_PER_PAGE = 3  # Сколько тренеров на странице
 bot = telebot.TeleBot(config.BOT_TOKEN)
 import requests
 apihelper.proxy = {
-    'https': 'socks5://zapret:zapret@proxy.zapret.info:1194'
+    'https': 'http://185.94.164.165:8080' 
 }
 user_data = {}
 
