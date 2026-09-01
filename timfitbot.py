@@ -8,6 +8,13 @@ from db_helper import update_slots_status
 from db_helper import clear_past_bookings  # 👈 ИМПОРТ
 import threading
 import socket
+
+from flask import Flask, request
+
+import requests
+
+
+
 print("✅ Бот запущен, токен получен")
 def dummy_server():
     try:
@@ -30,7 +37,11 @@ ITEMS_PER_PAGE = 3  # Сколько тренеров на странице
 
 bot = telebot.TeleBot(config.BOT_TOKEN)
 
-import requests
+
+WEBHOOK_URL = "https://timfitbot.onrender.com/webhook"
+bot.remove_webhook()
+bot.set_webhook(url=WEBHOOK_URL)
+print("Webhook установлен!")
 '''
 if config.PROXY_URL:
     apihelper.proxy = {
@@ -650,5 +661,16 @@ import sys
 sys.stdout.flush()
 print("✅ Бот запущен и готов к работе")
 sys.stdout.flush()
+app = Flask(__name__)
 
-bot.polling(none_stop=True)
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    json_str = request.get_data().decode('UTF-8')
+    update = telebot.types.Update.de_json(json_str)
+    bot.process_new_updates([update])
+    return "OK", 200
+
+if __name__ == '__main__':
+    bot.remove_webhook()
+    bot.set_webhook(url='https://timfitbot.onrender.com/webhook')
+    app.run(host='0.0.0.0', port=10000)
