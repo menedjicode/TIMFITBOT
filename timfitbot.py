@@ -11,6 +11,9 @@ import socket
 
 import requests
 
+import os
+os.environ['HTTPS_PROXY'] = 'https://core.telegram.org/getProxy'
+
 try:
     response = requests.get(f"https://api.telegram.org/bot{config.BOT_TOKEN}/getMe")
     print(f"✅ Telegram API доступен: {response.json()}")
