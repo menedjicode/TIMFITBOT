@@ -8,7 +8,7 @@ from db_helper import update_slots_status
 from db_helper import clear_past_bookings  # 👈 ИМПОРТ
 import threading
 import socket
-
+print("✅ Бот запущен, токен получен")
 def dummy_server():
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -38,7 +38,8 @@ if config.PROXY_URL:
     }
     '''
 user_data = {}
-print("✅ Бот запущен, токен получен")
+
+print(f"✅ Токен: {config.BOT_TOKEN[:10]}...") 
 
 def get_all_trainers():
     conn = sqlite3.connect('timfitbot.sql')
@@ -50,6 +51,7 @@ def get_all_trainers():
 
 @bot.message_handler(commands=['start'])
 def start(message):
+    print(f"✅ Получена команда /start от {message.chat.id}")
     user_id = message.chat.id
     user_data[user_id] = {}
 
