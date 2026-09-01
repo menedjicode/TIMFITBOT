@@ -9,8 +9,6 @@ from db_helper import clear_past_bookings  # 👈 ИМПОРТ
 import threading
 import socket
 
-from flask import Flask, request
-
 import requests
 
 
@@ -37,11 +35,6 @@ ITEMS_PER_PAGE = 3  # Сколько тренеров на странице
 
 bot = telebot.TeleBot(config.BOT_TOKEN)
 
-
-WEBHOOK_URL = "https://timfitbot.onrender.com/webhook"
-bot.remove_webhook()
-bot.set_webhook(url=WEBHOOK_URL)
-print("Webhook установлен!")
 '''
 if config.PROXY_URL:
     apihelper.proxy = {
@@ -661,16 +654,22 @@ import sys
 sys.stdout.flush()
 print("✅ Бот запущен и готов к работе")
 sys.stdout.flush()
-app = Flask(__name__)
 
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    json_str = request.get_data().decode('UTF-8')
-    update = telebot.types.Update.de_json(json_str)
-    bot.process_new_updates([update])
-    return "OK", 200
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import json
+
+class WebhookHandler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        if self.path == '/webhook':
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            update = telebot.types.Update.de_json(post_data.decode('utf-8'))
+            bot.process_new_updates([update])
+            self.send_response(200)
+            self.end_headers()
 
 if __name__ == '__main__':
     bot.remove_webhook()
     bot.set_webhook(url='https://timfitbot.onrender.com/webhook')
-    app.run(host='0.0.0.0', port=10000)
+    server = HTTPServer(('0.0.0.0', 10000), WebhookHandler)
+    server.serve_forever()
