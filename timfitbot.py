@@ -647,14 +647,10 @@ class WebhookHandler(BaseHTTPRequestHandler):
         if self.path == '/webhook':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
-            print("📩 Вебхук получен")
-            try:
-                update = telebot.types.Update.de_json(post_data.decode('utf-8'))
-                bot.process_new_updates([update])
-                self.send_response(200)
-            except Exception as e:
-                print(f"❌ Ошибка: {e}")
-                self.send_response(500)
+            update = telebot.types.Update.de_json(post_data.decode('utf-8'))
+            print(f"📩 Обновление: {update}")  # 👈 ПРОВЕРКА
+            bot.process_new_updates([update])
+            self.send_response(200)
             self.end_headers()
 bot.remove_webhook()
 bot.set_webhook(url='https://timfitbot.onrender.com/webhook')
