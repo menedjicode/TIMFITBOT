@@ -637,7 +637,7 @@ def process_name(message):
 
     except Exception as e:
         bot.send_message(user_id, f'❌ Ошибка: {str(e)}')
-
+bot.delete_webhook()
 bot.stop_polling()
 print("Старое соединение сброшено")
 
