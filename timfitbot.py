@@ -646,4 +646,9 @@ def process_name(message):
 bot.stop_polling()
 print("Старое соединение сброшено")
 
+import sys
+sys.stdout.flush()
+print("✅ Бот запущен и готов к работе")
+sys.stdout.flush()
+
 bot.polling(none_stop=True)
