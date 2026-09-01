@@ -43,39 +43,41 @@ def start(message):
     user_id = message.chat.id
     user_data[user_id] = {}
 
+    try:
+        conn = sqlite3.connect('timfitbot.sql')
+        cur = conn.cursor()
+        cur.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,name VARCHAR(50),time INTEGER,coach VARCHAR(50),date VARCHAR(20),telegram_id INTEGER, UNIQUE(telegram_id, date, time))')
+        cur.execute('''
+               CREATE TABLE IF NOT EXISTS coaches (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   telegram_id INTEGER UNIQUE,
+                   name VARCHAR(100),
+                   about TEXT,
+                   is_active INTEGER DEFAULT 1
+               )
+           ''')
 
-    conn = sqlite3.connect('timfitbot.sql')
-    cur = conn.cursor()
-    cur.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,name VARCHAR(50),time INTEGER,coach VARCHAR(50),date VARCHAR(20),telegram_id INTEGER, UNIQUE(telegram_id, date, time))')
-    cur.execute('''
-           CREATE TABLE IF NOT EXISTS coaches (
-               id INTEGER PRIMARY KEY AUTOINCREMENT,
-               telegram_id INTEGER UNIQUE,
-               name VARCHAR(100),
-               about TEXT,
-               is_active INTEGER DEFAULT 1
-           )
-       ''')
+        conn.commit()
 
-    conn.commit()
+        cur.close()
+        conn.close()
 
-    cur.close()
-    conn.close()
+        cleared = clear_past_bookings()
+        if cleared > 0:
+            print(f"🗑️ Удалено {cleared} прошедших записей")
 
-    cleared = clear_past_bookings()
-    if cleared > 0:
-        print(f"🗑️ Удалено {cleared} прошедших записей")
+        markup = types.InlineKeyboardMarkup(row_width=2)
 
-    markup = types.InlineKeyboardMarkup(row_width=2)
+        appoint = types.InlineKeyboardButton('📝 Записаться', callback_data='appoint')
+        coaches = types.InlineKeyboardButton('👨‍🏫 Тренеры', callback_data='coaches')
 
-    appoint = types.InlineKeyboardButton('📝 Записаться', callback_data='appoint')
-    coaches = types.InlineKeyboardButton('👨‍🏫 Тренеры', callback_data='coaches')
+        markup.row(appoint, coaches)
+        markup.row(types.InlineKeyboardButton('📋 Мои записи', callback_data='list'))
+        markup.row(types.InlineKeyboardButton('📊 Мои тренировки', callback_data='history'))
 
-    markup.row(appoint, coaches)
-    markup.row(types.InlineKeyboardButton('📋 Мои записи', callback_data='list'))
-    markup.row(types.InlineKeyboardButton('📊 Мои тренировки', callback_data='history'))
-
-    bot.send_message(message.chat.id, '👋 Здравствуйте!\n\nВы можете записаться к тренеру или посмотреть информацию о тренерах.', reply_markup=markup)
+        bot.send_message(message.chat.id, '👋 Здравствуйте!\n\nВы можете записаться к тренеру или посмотреть информацию о тренерах.', reply_markup=markup)
+    except Exception as e:
+        print(f"Ошибка при создании таблиц: {e}")
 
 
 def show_coaches_list(call, page=0):
