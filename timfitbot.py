@@ -14,22 +14,6 @@ import requests
 
 
 print("✅ Бот запущен, токен получен")
-def dummy_server():
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind(('0.0.0.0', 10001))
-            s.listen(1)
-            while True:
-                conn, _ = s.accept()
-                conn.send(b"HTTP/1.1 200 OK\n\nBot is running")
-                conn.close()
-    except:
-        pass
-
-# Запускаем в фоне
-threading.Thread(target=dummy_server, daemon=True).start()
-
-
 
 ITEMS_PER_PAGE = 3  # Сколько тренеров на странице
 
