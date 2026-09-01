@@ -654,6 +654,6 @@ class WebhookHandler(BaseHTTPRequestHandler):
 
 if __name__ == '__main__':
     bot.remove_webhook()
-    bot.set_webhook(url='https://timfitbot.onrender.com:10001/webhook')
+    bot.set_webhook(url='https://timfitbot.onrender.com/webhook')
     server = HTTPServer(('0.0.0.0', 10001), WebhookHandler)
     server.serve_forever()
