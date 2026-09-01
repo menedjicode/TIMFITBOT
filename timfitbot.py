@@ -643,6 +643,7 @@ def process_name(message):
     except Exception as e:
         bot.send_message(user_id, f'❌ Ошибка: {str(e)}')
 
-
+bot.stop_polling()
+print("Старое соединение сброшено")
 
 bot.polling(none_stop=True)
