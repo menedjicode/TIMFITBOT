@@ -218,7 +218,7 @@ def show_slots_for_booking(call, trainer_id):
     """Показывает свободные слоты для записи"""
     user_id = call.message.chat.id
 
-    conn = sqlite3.connect('annika.sql')
+    conn = sqlite3.connect('timfitbot.sql')
     cur = conn.cursor()
     cur.execute('SELECT name FROM coaches WHERE id = ?', (trainer_id,))
     trainer = cur.fetchone()
@@ -326,7 +326,7 @@ def callback(call):
 
 
     elif call.data == 'list':
-        conn = sqlite3.connect('annika.sql')
+        conn = sqlite3.connect('timfitbot.sql')
         cur = conn.cursor()
 
         cur.execute('SELECT id, name, coach, date, time FROM users WHERE telegram_id = ? ORDER BY date DESC', (user_id,))
@@ -374,7 +374,7 @@ def callback(call):
     elif call.data.startswith('cancel_booking_'):
         booking_id = int(call.data.split('_')[2])
 
-        conn = sqlite3.connect('annika.sql')
+        conn = sqlite3.connect('timfitbot.sql')
         cur = conn.cursor()
 
         cur.execute('SELECT id, name, coach, date, time, telegram_id FROM users WHERE id = ?', (booking_id,))
@@ -416,7 +416,7 @@ def callback(call):
         trainer_id = int(trainer_id)
         time = int(time)
 
-        conn = sqlite3.connect('annika.sql')
+        conn = sqlite3.connect('timfitbot.sql')
         cur = conn.cursor()
         cur.execute('SELECT name FROM coaches WHERE id = ?', (trainer_id,))
         trainer = cur.fetchone()
@@ -463,7 +463,7 @@ def callback(call):
 
         ITEMS_PER_PAGE = 10
 
-        conn = sqlite3.connect('annika.sql')
+        conn = sqlite3.connect('timfitbot.sql')
         cur = conn.cursor()
 
         today = datetime.now().strftime('%d.%m.%Y')
@@ -566,7 +566,7 @@ def process_name(message):
     user_data[user_id]['name'] = message.text
 
     try:
-        conn = sqlite3.connect('annika.sql')
+        conn = sqlite3.connect('timfitbot.sql')
         cur = conn.cursor()
 
         coach_map = {
