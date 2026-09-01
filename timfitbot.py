@@ -11,6 +11,12 @@ import socket
 
 import requests
 
+try:
+    response = requests.get(f"https://api.telegram.org/bot{config.BOT_TOKEN}/getMe")
+    print(f"✅ Telegram API доступен: {response.json()}")
+except Exception as e:
+    print(f"❌ Ошибка подключения к Telegram API: {e}")
+
 def dummy_server():
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
