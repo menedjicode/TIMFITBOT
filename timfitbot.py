@@ -17,7 +17,7 @@ print("✅ Бот запущен, токен получен")
 def dummy_server():
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind(('0.0.0.0', 10000))
+            s.bind(('0.0.0.0', 10001))
             s.listen(1)
             while True:
                 conn, _ = s.accept()
@@ -670,6 +670,6 @@ class WebhookHandler(BaseHTTPRequestHandler):
 
 if __name__ == '__main__':
     bot.remove_webhook()
-    bot.set_webhook(url='https://timfitbot.onrender.com/webhook')
-    server = HTTPServer(('0.0.0.0', 10000), WebhookHandler)
+    bot.set_webhook(url='https://timfitbot.onrender.com/webhook:10001')
+    server = HTTPServer(('0.0.0.0', 10001), WebhookHandler)
     server.serve_forever()
