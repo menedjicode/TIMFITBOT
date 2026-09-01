@@ -1,2 +1,2 @@
 BOT_TOKEN=''
-ADM_IDS = [1483929727]
+ADM_IDS = []
