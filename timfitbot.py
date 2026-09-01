@@ -641,6 +641,6 @@ def process_name(message):
 bot.stop_polling()
 print("Старое соединение сброшено")
 
-bot.start_polling(non_stop=True)
+bot.polling(non_stop=True)
 
 
