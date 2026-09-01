@@ -31,7 +31,7 @@ ITEMS_PER_PAGE = 3  # Сколько тренеров на странице
 bot = telebot.TeleBot(config.BOT_TOKEN)
 import requests
 apihelper.proxy = {
-    'https': 'http://185.94.164.165:8080' 
+    'https': 'http://51.15.166.225:3128'
 }
 user_data = {}
 
